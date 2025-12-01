@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: RAW
+    description: "Raw source tables for the ecommerce analytics project"
+    database: "{{ target.database }}" # ANALYTICSDEV or ANALYTICSPROD depending on env
+    schema: RAW # RAW schema in each database
+
+    tables:
+      - name: RAW_CUSTOMERS
+        description: "Raw customers data"
+
+      - name: RAW_ORDERS
+        description: "Raw orders header data"
+
+      - name: RAW_ORDER_ITEMS
+        description: "Raw order line items data"
