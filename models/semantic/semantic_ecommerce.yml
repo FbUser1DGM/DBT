@@ -1,114 +1,114 @@
 version: 2
 
 semantic_models:
-  - name: ORDERS_SEMANTIC_MODEL
-    description: "ORDER-LEVEL FACTS FOR ECOMMERCE ANALYTICS."
+  - name: orders_semantic_model
+    description: "order-level facts for ecommerce analytics."
     model: ref('fct_orders')
 
     defaults:
-      agg_time_dimension: ORDER_DATE
+      agg_time_dimension: order_date
 
     entities:
-      - name: ORDER
+      - name: order
         type: primary
         expr: ORDER_ID
 
-      - name: CUSTOMER
+      - name: customer
         type: foreign
         expr: CUSTOMER_ID
 
     measures:
-      - name: ORDER_REVENUE
-        description: "TOTAL REVENUE FROM ORDERS."
+      - name: order_revenue
+        description: "total revenue from orders."
         agg: sum
         expr: ORDER_REVENUE
         create_metric: true
 
-      - name: ORDER_COUNT
-        description: "COUNT OF DISTINCT ORDERS."
+      - name: order_count
+        description: "count of distinct orders."
         agg: count_distinct
         expr: ORDER_ID
         create_metric: true
 
-      - name: ITEMS_SOLD
-        description: "TOTAL QUANTITY OF ITEMS SOLD."
+      - name: items_sold
+        description: "total quantity of items sold."
         agg: sum
         expr: TOTAL_ITEMS
         create_metric: true
 
     dimensions:
-      - name: ORDER_DATE
-        description: "DATE OF ORDER."
+      - name: order_date
+        description: "date of order."
         type: time
         expr: ORDER_DATE
         type_params:
           time_granularity: day
 
-      - name: ORDER_STATUS
-        description: "STATUS OF THE ORDER."
+      - name: order_status
+        description: "status of the order."
         type: categorical
         expr: ORDER_STATUS
 
-      - name: PAYMENT_METHOD
-        description: "PAYMENT METHOD USED FOR THE ORDER."
+      - name: payment_method
+        description: "payment method used for the order."
         type: categorical
         expr: PAYMENT_METHOD
 
-  - name: CUSTOMERS_SEMANTIC_MODEL
-    description: "CUSTOMER DIMENSION FOR ECOMMERCE ANALYTICS."
+  - name: customers_semantic_model
+    description: "customer dimension for ecommerce analytics."
     model: ref('dim_customers')
 
     entities:
-      - name: CUSTOMER
+      - name: customer
         type: primary
         expr: CUSTOMER_ID
 
     dimensions:
-      - name: CUSTOMER_ID
-        description: "PRIMARY KEY FOR CUSTOMER."
+      - name: customer_id
+        description: "primary key for customer."
         type: categorical
         expr: CUSTOMER_ID
 
-      - name: CUSTOMER_NAME
-        description: "NAME OF THE CUSTOMER."
+      - name: customer_name
+        description: "name of the customer."
         type: categorical
         expr: CUSTOMER_NAME
 
-      - name: EMAIL
-        description: "EMAIL ADDRESS OF THE CUSTOMER."
+      - name: email
+        description: "email address of the customer."
         type: categorical
         expr: EMAIL
 
-      - name: COUNTRY
-        description: "COUNTRY OF THE CUSTOMER."
+      - name: country
+        description: "country of the customer."
         type: categorical
         expr: COUNTRY
 
-      - name: CUSTOMER_CREATED_AT
-        description: "TIMESTAMP WHEN THE CUSTOMER WAS CREATED."
+      - name: customer_created_at
+        description: "timestamp when the customer was created."
         type: time
         expr: CUSTOMER_CREATED_AT
         type_params:
           time_granularity: day
 
 metrics:
-  - name: TOTAL_REVENUE
-    description: "TOTAL ORDER REVENUE ACROSS ALL ORDERS."
+  - name: total_revenue
+    description: "total order revenue across all orders."
     type: simple
     label: "TOTAL REVENUE"
     type_params:
-      measure: ORDER_REVENUE
+      measure: order_revenue
 
-  - name: TOTAL_ORDERS
-    description: "TOTAL NUMBER OF DISTINCT ORDERS."
+  - name: total_orders
+    description: "total number of distinct orders."
     type: simple
     label: "TOTAL ORDERS"
     type_params:
-      measure: ORDER_COUNT
+      measure: order_count
 
-  - name: TOTAL_ITEMS_SOLD
-    description: "TOTAL QUANTITY OF ITEMS SOLD ACROSS ORDERS."
+  - name: total_items_sold
+    description: "total quantity of items sold across orders."
     type: simple
     label: "TOTAL ITEMS SOLD"
     type_params:
-      measure: ITEMS_SOLD
+      measure: items_sold
