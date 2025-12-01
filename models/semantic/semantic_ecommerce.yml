@@ -1,12 +1,5 @@
 version: 2
 
-time_spines:
-  - name: TIME_SPINE
-    description: "TIME SPINE MODEL WITH ONE ROW PER DAY."
-    model: ref('TIME_SPINE')
-    primary_time_dimension: DATE_DAY
-    grain: day
-
 semantic_models:
   - name: ORDERS_SEMANTIC_MODEL
     description: "ORDER-LEVEL FACTS FOR ECOMMERCE ANALYTICS."

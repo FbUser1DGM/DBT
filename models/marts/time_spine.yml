@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: metricflow_time_spine
+    description: "TIME SPINE WITH ONE ROW PER DAY, USED BY METRICFLOW/SEMANTIC LAYER."
+    time_spine:
+      standard_granularity_column: DATE_DAY   # base column for joins
+
+    columns:
+      - name: DATE_DAY
+        description: "BASE DATE COLUMN FOR DAILY GRANULARITY."
+        granularity: day                      # <= THIS is the DAY granularity it needs
