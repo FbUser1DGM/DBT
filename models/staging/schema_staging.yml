@@ -1,0 +1,93 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "CLEANED CUSTOMERS DATA FROM RAW_CUSTOMERS."
+    columns:
+      - name: customer_id
+        description: "PRIMARY KEY FOR CUSTOMER."
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_name
+        description: "CUSTOMER NAME."
+
+      - name: email
+        description: "EMAIL ADDRESS."
+        tests:
+          - not_null
+
+      - name: country
+        description: "CUSTOMER COUNTRY."
+
+      - name: created_at
+        description: "CREATION TIMESTAMP FROM SOURCE."
+
+  - name: STG_ORDERS
+    description: "CLEANED ORDERS DATA FROM RAW_ORDERS."
+    columns:
+      - name: ORDER_ID
+        description: "PRIMARY KEY FOR ORDER."
+        tests:
+          - not_null
+          - unique
+
+      - name: CUSTOMER_ID
+        description: "FOREIGN KEY TO CUSTOMER."
+        tests:
+          - not_null
+
+      - name: ORDER_DATE
+        description: "ORDER DATE."
+        tests:
+          - not_null
+
+      - name: ORDER_STATUS
+        description: "STATUS OF THE ORDER."
+
+      - name: PAYMENT_METHOD
+        description: "PAYMENT METHOD."
+
+      - name: CREATED_AT
+        description: "CREATION TIMESTAMP."
+
+  - name: STG_ORDER_ITEMS
+    description: "CLEANED ORDER LINE ITEMS FROM RAW_ORDER_ITEMS."
+    columns:
+      - name: ORDER_ITEM_ID
+        description: "PRIMARY KEY FOR ORDER LINE."
+        tests:
+          - not_null
+          - unique
+
+      - name: ORDER_ID
+        description: "PARENT ORDER ID."
+        tests:
+          - not_null
+
+      - name: PRODUCT_ID
+        description: "PRODUCT ID."
+
+      - name: PRODUCT_NAME
+        description: "PRODUCT NAME."
+
+      - name: CATEGORY
+        description: "PRODUCT CATEGORY."
+
+      - name: UNIT_PRICE
+        description: "PRICE PER UNIT."
+
+      - name: QUANTITY
+        description: "QUANTITY ORDERED."
+        tests:
+          - not_null
+
+      - name: DISCOUNT_AMOUNT
+        description: "DISCOUNT AMOUNT."
+
+      - name: LINE_REVENUE
+        description: "CALCULATED REVENUE FOR THIS LINE."
+
+      - name: CREATED_AT
+        description: "CREATION TIMESTAMP."

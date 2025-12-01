@@ -2,16 +2,56 @@ version: 2
 
 sources:
   - name: RAW
-    description: "Raw source tables for the ecommerce analytics project"
-    database: "{{ target.database }}" # ANALYTICSDEV or ANALYTICSPROD depending on env
-    schema: RAW # RAW schema in each database
+    description: "RAW SOURCE TABLES FOR THE ECOMMERCE ANALYTICS PROJECT."
+    database: "{{ target.database }}" 
+    schema: RAW 
+
+    loaded_at_field: CREATED_AT
+    freshness:
+      warn_after: { count: 1, period: hour }
+      error_after: { count: 4, period: hour }
 
     tables:
       - name: RAW_CUSTOMERS
-        description: "Raw customers data"
+        description: "RAW CUSTOMERS DATA FROM SOURCE SYSTEM."
+        columns:
+          - name: CUSTOMER_ID
+            description: "PRIMARY KEY FOR CUSTOMER."
+            tests:
+              - not_null
 
       - name: RAW_ORDERS
-        description: "Raw orders header data"
+        description: "RAW ORDER HEADER DATA."
+        columns:
+          - name: ORDER_ID
+            description: "PRIMARY KEY FOR ORDER."
+            tests:
+              - not_null
+
+          - name: CUSTOMER_ID
+            description: "FOREIGN KEY TO RAW_CUSTOMERS."
+            tests:
+              - not_null
+
+          - name: ORDER_DATE
+            description: "ORDER DATE."
+            tests:
+              - not_null
 
       - name: RAW_ORDER_ITEMS
-        description: "Raw order line items data"
+        description: "RAW ORDER LINE ITEMS DATA."
+        columns:
+          - name: ORDER_ITEM_ID
+            description: "PRIMARY KEY FOR ORDER LINE."
+            tests:
+              - not_null
+
+          - name: ORDER_ID
+            description: "PARENT ORDER ID."
+            tests:
+              - not_null
+
+          - name: QUANTITY
+            description: "QUANTITY OF PRODUCT ORDERED."
+            tests:
+              - not_null

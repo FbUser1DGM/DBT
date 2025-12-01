@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: DIM_CUSTOMERS
+    description: "CUSTOMER DIMENSION TABLE (ONE ROW PER CUSTOMER)."
+    columns:
+      - name: CUSTOMER_ID
+        description: "PRIMARY KEY FOR DIM CUSTOMER."
+        tests:
+          - not_null
+          - unique
+
+      - name: CUSTOMER_NAME
+        description: "CUSTOMER NAME."
+
+      - name: EMAIL
+        description: "EMAIL ADDRESS."
+
+      - name: COUNTRY
+        description: "COUNTRY OF THE CUSTOMER."
+
+      - name: CUSTOMER_CREATED_AT
+        description: "CREATION TIMESTAMP OF CUSTOMER RECORD."
+
+  - name: FCT_ORDERS
+    description: "ORDER FACT TABLE WITH ORDER-LEVEL METRICS."
+    columns:
+      - name: ORDER_ID
+        description: "PRIMARY KEY FOR ORDER."
+        tests:
+          - not_null
+          - unique
+
+      - name: CUSTOMER_ID
+        description: "FOREIGN KEY TO DIM_CUSTOMERS."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('DIM_CUSTOMERS')
+              field: CUSTOMER_ID
+
+      - name: ORDER_DATE
+        description: "DATE OF ORDER."
+        tests:
+          - not_null
+
+      - name: ORDER_STATUS
+        description: "STATUS OF ORDER."
+
+      - name: PAYMENT_METHOD
+        description: "PAYMENT METHOD USED."
+
+      - name: ORDER_REVENUE
+        description: "TOTAL REVENUE FOR THE ORDER."
+
+      - name: TOTAL_ITEMS
+        description: "TOTAL QUANTITY OF ITEMS ORDERED."
+
+      - name: ORDER_CREATED_AT
+        description: "CREATION TIMESTAMP OF ORDER."
