@@ -1,0 +1,121 @@
+version: 2
+
+time_spines:
+  - name: TIME_SPINE
+    description: "TIME SPINE MODEL WITH ONE ROW PER DAY."
+    model: ref('TIME_SPINE')
+    primary_time_dimension: DATE_DAY
+    grain: day
+
+semantic_models:
+  - name: ORDERS_SEMANTIC_MODEL
+    description: "ORDER-LEVEL FACTS FOR ECOMMERCE ANALYTICS."
+    model: ref('fct_orders')
+
+    defaults:
+      agg_time_dimension: ORDER_DATE
+
+    entities:
+      - name: ORDER
+        type: primary
+        expr: ORDER_ID
+
+      - name: CUSTOMER
+        type: foreign
+        expr: CUSTOMER_ID
+
+    measures:
+      - name: ORDER_REVENUE
+        description: "TOTAL REVENUE FROM ORDERS."
+        agg: sum
+        expr: ORDER_REVENUE
+        create_metric: true
+
+      - name: ORDER_COUNT
+        description: "COUNT OF DISTINCT ORDERS."
+        agg: count_distinct
+        expr: ORDER_ID
+        create_metric: true
+
+      - name: ITEMS_SOLD
+        description: "TOTAL QUANTITY OF ITEMS SOLD."
+        agg: sum
+        expr: TOTAL_ITEMS
+        create_metric: true
+
+    dimensions:
+      - name: ORDER_DATE
+        description: "DATE OF ORDER."
+        type: time
+        expr: ORDER_DATE
+        type_params:
+          time_granularity: day
+
+      - name: ORDER_STATUS
+        description: "STATUS OF THE ORDER."
+        type: categorical
+        expr: ORDER_STATUS
+
+      - name: PAYMENT_METHOD
+        description: "PAYMENT METHOD USED FOR THE ORDER."
+        type: categorical
+        expr: PAYMENT_METHOD
+
+  - name: CUSTOMERS_SEMANTIC_MODEL
+    description: "CUSTOMER DIMENSION FOR ECOMMERCE ANALYTICS."
+    model: ref('dim_customers')
+
+    entities:
+      - name: CUSTOMER
+        type: primary
+        expr: CUSTOMER_ID
+
+    dimensions:
+      - name: CUSTOMER_ID
+        description: "PRIMARY KEY FOR CUSTOMER."
+        type: categorical
+        expr: CUSTOMER_ID
+
+      - name: CUSTOMER_NAME
+        description: "NAME OF THE CUSTOMER."
+        type: categorical
+        expr: CUSTOMER_NAME
+
+      - name: EMAIL
+        description: "EMAIL ADDRESS OF THE CUSTOMER."
+        type: categorical
+        expr: EMAIL
+
+      - name: COUNTRY
+        description: "COUNTRY OF THE CUSTOMER."
+        type: categorical
+        expr: COUNTRY
+
+      - name: CUSTOMER_CREATED_AT
+        description: "TIMESTAMP WHEN THE CUSTOMER WAS CREATED."
+        type: time
+        expr: CUSTOMER_CREATED_AT
+        type_params:
+          time_granularity: day
+
+metrics:
+  - name: TOTAL_REVENUE
+    description: "TOTAL ORDER REVENUE ACROSS ALL ORDERS."
+    type: simple
+    label: "TOTAL REVENUE"
+    type_params:
+      measure: ORDER_REVENUE
+
+  - name: TOTAL_ORDERS
+    description: "TOTAL NUMBER OF DISTINCT ORDERS."
+    type: simple
+    label: "TOTAL ORDERS"
+    type_params:
+      measure: ORDER_COUNT
+
+  - name: TOTAL_ITEMS_SOLD
+    description: "TOTAL QUANTITY OF ITEMS SOLD ACROSS ORDERS."
+    type: simple
+    label: "TOTAL ITEMS SOLD"
+    type_params:
+      measure: ITEMS_SOLD
