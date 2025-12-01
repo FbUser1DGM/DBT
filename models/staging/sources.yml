@@ -3,8 +3,8 @@ version: 2
 sources:
   - name: RAW
     description: "RAW SOURCE TABLES FOR THE ECOMMERCE ANALYTICS PROJECT."
-    database: "{{ target.database }}" 
-    schema: RAW 
+    database: "{{ target.database }}"
+    schema: RAW
 
     loaded_at_field: CREATED_AT
     freshness:
