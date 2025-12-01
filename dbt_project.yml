@@ -10,8 +10,6 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
-
-target-path: "target"
 clean-targets:
   - "target"
   - "dbt_packages"
@@ -21,23 +19,28 @@ models:
     staging:
       +materialized: view
       +schema: STAGING
-      +pre_hook:
-        - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'PRE_HOOK START');"
-      +post_hook:
-        - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'POST_HOOK END');"
+      +meta:
+        pre_hook:
+          - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'PRE_HOOK START');"
+        post_hook:
+          - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'POST_HOOK END');"
 
     marts:
       +materialized: table
       +schema: MARTS
-      +pre_hook:
-        - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'PRE_HOOK START');"
-      +post_hook:
-        - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'POST_HOOK END');"
+      +meta:
+        pre_hook:
+          - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'PRE_HOOK START');"
+        post_hook:
+          - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'POST_HOOK END');"
 
     semantic:
       +materialized: table
       +schema: MARTS
-      +pre_hook:
-        - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'PRE_HOOK START');"
-      +post_hook:
-        - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'POST_HOOK END');"
+      +meta:
+        pre_hook:
+          - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'PRE_HOOK START');"
+        post_hook:
+          - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'POST_HOOK END');"
+flags:
+  require_generic_test_arguments_property: true

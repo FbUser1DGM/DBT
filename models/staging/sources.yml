@@ -6,10 +6,6 @@ sources:
     database: "{{ target.database }}"
     schema: RAW
 
-    loaded_at_field: CREATED_AT
-    freshness:
-      warn_after: { count: 1, period: hour }
-      error_after: { count: 4, period: hour }
 
     tables:
       - name: RAW_CUSTOMERS
@@ -55,3 +51,8 @@ sources:
             description: "QUANTITY OF PRODUCT ORDERED."
             tests:
               - not_null
+    config:
+      loaded_at_field: CREATED_AT
+      freshness:
+        warn_after: {count: 1, period: hour}
+        error_after: {count: 4, period: hour}
