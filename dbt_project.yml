@@ -16,31 +16,60 @@ clean-targets:
 
 models:
   my_new_project:
+    # Optional but very useful so docs show column-level metadata in dbt Cloud
+    +persist_docs:
+      relation: true
+      columns: true
+
+    # All models under models/staging/** (including staging/banking, staging/retail)
     staging:
       +materialized: view
       +schema: STAGING
+      +tags: ["layer:staging"]
       +meta:
         pre_hook:
           - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'PRE_HOOK START');"
         post_hook:
           - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'POST_HOOK END');"
 
+      # Subfolders like models/staging/banking/*
+      banking:
+        +tags: ["domain:banking"]
+      # Subfolders like models/staging/retail/*
+      retail:
+        +tags: ["domain:retail"]
+      # If you add a shared/calendar folder later
+      shared:
+        +tags: ["domain:shared"]
+
+    # All models under models/marts/** (including marts/banking, marts/retail)
     marts:
       +materialized: table
       +schema: MARTS
+      +tags: ["layer:marts"]
       +meta:
         pre_hook:
           - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'PRE_HOOK START');"
         post_hook:
           - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'POST_HOOK END');"
 
+      # Subfolders like models/marts/banking/*
+      banking:
+        +tags: ["domain:banking"]
+      # Subfolders like models/marts/retail/*
+      retail:
+        +tags: ["domain:retail"]
+
+    # Existing semantic layer (if you have models/semantic/**)
     semantic:
       +materialized: table
       +schema: MARTS
+      +tags: ["layer:semantic"]
       +meta:
         pre_hook:
           - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'PRE_HOOK START');"
         post_hook:
           - "INSERT INTO ANALYTICSDEV.MARTS.LOG_TABLE (EVENT_TIME, MODEL_NAME, ACTION) VALUES (CURRENT_TIMESTAMP, '{{ this.name | upper }}', 'POST_HOOK END');"
+
 flags:
   require_generic_test_arguments_property: true
