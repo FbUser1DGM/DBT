@@ -1,6 +1,9 @@
 version: 2
 
 models:
+  # ---------------------------------------
+  # Existing ecommerce marts
+  # ---------------------------------------
   - name: DIM_CUSTOMERS
     description: "CUSTOMER DIMENSION TABLE (ONE ROW PER CUSTOMER)."
     columns:
@@ -39,6 +42,7 @@ models:
               arguments:
                 to: ref('DIM_CUSTOMERS')
                 field: CUSTOMER_ID
+
       - name: ORDER_DATE
         description: "DATE OF ORDER."
         tests:
@@ -58,3 +62,140 @@ models:
 
       - name: ORDER_CREATED_AT
         description: "CREATION TIMESTAMP OF ORDER."
+
+  # ---------------------------------------
+  # New banking mart
+  # ---------------------------------------
+  - name: fct_bank_transactions
+    description: "ENRICHED BANK TRANSACTIONS FACT TABLE WITH FRAUD LABELS."
+    columns:
+      - name: TRANSACTION_ID
+        description: "PRIMARY KEY OF THE TRANSACTION."
+        tests:
+          - not_null
+          - unique
+
+      - name: ACCOUNT_ID
+        description: "ACCOUNT IDENTIFIER."
+
+      - name: CUSTOMER_ID
+        description: "CUSTOMER IDENTIFIER."
+
+      - name: TRANSACTION_TS
+        description: "TIMESTAMP WHEN THE TRANSACTION OCCURRED."
+
+      - name: POSTING_DATE
+        description: "DATE WHEN THE TRANSACTION WAS POSTED."
+
+      - name: AMOUNT_LOCAL
+        description: "TRANSACTION AMOUNT IN LOCAL CURRENCY."
+        tests:
+          - not_null
+
+      - name: CURRENCY
+        description: "CURRENCY CODE OF THE TRANSACTION."
+
+      - name: MERCHANT_ID
+        description: "MERCHANT IDENTIFIER."
+
+      - name: MERCHANT_CATEGORY
+        description: "MERCHANT CATEGORY (E.G. GROCERY, ELECTRONICS)."
+
+      - name: CHANNEL
+        description: "CHANNEL OF THE TRANSACTION (POS, ONLINE, MOBILE, ETC.)."
+
+      - name: COUNTRY
+        description: "COUNTRY WHERE THE TRANSACTION WAS MADE."
+
+      - name: STATUS
+        description: "TRANSACTION STATUS (AUTHORIZED, POSTED, REVERSED)."
+
+      - name: IS_INTERNATIONAL
+        description: "FLAG INDICATING WHETHER THE TRANSACTION IS INTERNATIONAL."
+
+      - name: FRAUD_LABEL
+        description: "FRAUD LABEL FOR THE TRANSACTION (FRAUD / LEGIT)."
+
+      - name: FRAUD_LABEL_REASON
+        description: "REASON FOR FRAUD LABEL."
+
+      - name: FRAUD_LABEL_SOURCE
+        description: "SOURCE OF FRAUD LABEL (MODEL, MANUAL_REVIEW, ETC.)."
+
+      - name: LOADED_AT
+        description: "INGESTION / LOAD TIMESTAMP OF THE RECORD."
+
+  # ---------------------------------------
+  # New retail marts
+  # ---------------------------------------
+  - name: fct_product_sales
+    description: "LINE-ITEM LEVEL FACT TABLE FOR RETAIL PRODUCT SALES."
+    columns:
+      - name: ORDER_ITEM_ID
+        description: "PRIMARY KEY FOR ORDER LINE."
+        tests:
+          - not_null
+          - unique
+
+      - name: ORDER_ID
+        description: "PARENT ORDER IDENTIFIER."
+
+      - name: ORDER_DATE
+        description: "DATE OF THE ORDER."
+
+      - name: CUSTOMER_ID
+        description: "CUSTOMER WHO PLACED THE ORDER."
+
+      - name: STORE_ID
+        description: "STORE WHERE THE ORDER WAS FULFILLED."
+
+      - name: PRODUCT_ID
+        description: "PRODUCT SOLD IN THE ORDER LINE."
+
+      - name: QUANTITY
+        description: "QUANTITY OF PRODUCT SOLD."
+
+      - name: UNIT_PRICE
+        description: "UNIT PRICE AT TIME OF ORDER."
+
+      - name: DISCOUNT_AMOUNT
+        description: "DISCOUNT APPLIED AT LINE LEVEL."
+
+      - name: TAX_AMOUNT
+        description: "TAX APPLIED AT LINE LEVEL."
+
+      - name: GROSS_LINE_AMOUNT
+        description: "GROSS AMOUNT BEFORE DISCOUNTS."
+
+      - name: NET_LINE_AMOUNT
+        description: "NET AMOUNT AFTER DISCOUNTS."
+        tests:
+          - not_null
+
+      - name: ORDER_CHANNEL
+        description: "CHANNEL OF THE ORDER (STORE, WEB, APP)."
+
+      - name: CURRENCY
+        description: "CURRENCY OF THE ORDER."
+
+      - name: LOADED_AT
+        description: "INGESTION / LOAD TIMESTAMP OF THE RECORD."
+
+  - name: product_performance_daily
+    description: "DAILY PRODUCT PERFORMANCE (UNITS SOLD AND REVENUE) BY PRODUCT AND DATE."
+    columns:
+      - name: ORDER_DATE
+        description: "DATE OF THE ORDER."
+        tests:
+          - not_null
+
+      - name: PRODUCT_ID
+        description: "PRODUCT IDENTIFIER."
+        tests:
+          - not_null
+
+      - name: UNITS_SOLD
+        description: "TOTAL UNITS SOLD FOR THE PRODUCT ON THE GIVEN DATE."
+
+      - name: REVENUE
+        description: "TOTAL REVENUE FOR THE PRODUCT ON THE GIVEN DATE."
