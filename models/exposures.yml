@@ -1,0 +1,29 @@
+version: 2
+
+exposures:
+  - name: fraud_detection_dashboard
+    type: dashboard
+    label: "Fraud Detection – High Risk Transactions"
+    maturity: high
+    owner:
+      name: Fraud Analytics Team
+      email: sahil.goyal@gisul.co.in
+    url: "https://app.powerbi.com/groups/e01a2e24-44bd-4fc8-a412-87f255e68e69/dashboards/ab1389a2-bc8f-4232-a236-61d7945eebff?experience=power-bi"
+    description: >
+      Dashboard used to monitor high-risk transactions and fraud patterns.
+    depends_on:
+      - ref('fct_bank_transactions')
+
+  - name: product_performance_dashboard
+    type: dashboard
+    label: "Retail Product Performance"
+    maturity: high
+    owner:
+      name: Retail Analytics Team
+      email: retail-team@example.com
+    url: "https://bi.example.com/dashboards/product-performance"
+    description: >
+      Daily product sales and revenue metrics used by retail category managers.
+    depends_on:
+      - ref('product_performance_daily')
+      - ref('fct_product_sales')
