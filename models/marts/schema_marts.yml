@@ -36,9 +36,9 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('DIM_CUSTOMERS')
-              field: CUSTOMER_ID
-
+              arguments:
+                to: ref('DIM_CUSTOMERS')
+                field: CUSTOMER_ID
       - name: ORDER_DATE
         description: "DATE OF ORDER."
         tests:

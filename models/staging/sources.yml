@@ -6,14 +6,15 @@ sources:
     database: "{{ target.database }}"
     schema: RAW
 
-    loaded_at_field: CREATED_AT
-    freshness:
-      warn_after: { count: 1, period: hour }
-      error_after: { count: 4, period: hour }
-
     tables:
+      # --- Your existing ecommerce raw tables ---
+
       - name: RAW_CUSTOMERS
         description: "RAW CUSTOMERS DATA FROM SOURCE SYSTEM."
+        loaded_at_field: CREATED_AT
+        freshness:
+          warn_after: { count: 1, period: hour }
+          error_after: { count: 4, period: hour }
         columns:
           - name: CUSTOMER_ID
             description: "PRIMARY KEY FOR CUSTOMER."
@@ -22,6 +23,10 @@ sources:
 
       - name: RAW_ORDERS
         description: "RAW ORDER HEADER DATA."
+        loaded_at_field: CREATED_AT
+        freshness:
+          warn_after: { count: 1, period: hour }
+          error_after: { count: 4, period: hour }
         columns:
           - name: ORDER_ID
             description: "PRIMARY KEY FOR ORDER."
@@ -40,6 +45,10 @@ sources:
 
       - name: RAW_ORDER_ITEMS
         description: "RAW ORDER LINE ITEMS DATA."
+        loaded_at_field: CREATED_AT
+        freshness:
+          warn_after: { count: 1, period: hour }
+          error_after: { count: 4, period: hour }
         columns:
           - name: ORDER_ITEM_ID
             description: "PRIMARY KEY FOR ORDER LINE."
@@ -55,3 +64,136 @@ sources:
             description: "QUANTITY OF PRODUCT ORDERED."
             tests:
               - not_null
+
+      # --- New BANKING raw tables ---
+
+      - name: BANK_TRANSACTIONS
+        description: "RAW BANK CARD / ACCOUNT TRANSACTIONS."
+        loaded_at_field: INGESTED_AT
+        freshness:
+          warn_after: { count: 1, period: hour }
+          error_after: { count: 2, period: hour }
+        columns:
+          - name: TRANSACTION_ID
+            description: "PRIMARY KEY FOR TRANSACTION."
+            tests:
+              - not_null
+              - unique
+          - name: ACCOUNT_ID
+            description: "ACCOUNT IDENTIFIER."
+          - name: CUSTOMER_ID
+            description: "CUSTOMER IDENTIFIER."
+          - name: TRANSACTION_TS
+            description: "TIMESTAMP WHEN THE TRANSACTION OCCURRED."
+          - name: AMOUNT
+            description: "TRANSACTION AMOUNT IN LOCAL CURRENCY."
+
+      - name: CARDS
+        description: "RAW CARD MASTER DATA."
+        loaded_at_field: INGESTED_AT
+        columns:
+          - name: CARD_ID
+            description: "PRIMARY KEY FOR CARD."
+            tests:
+              - not_null
+          - name: CUSTOMER_ID
+            description: "OWNER OF THE CARD."
+
+      - name: BANK_CUSTOMERS
+        description: "RAW BANK CUSTOMER MASTER DATA."
+        loaded_at_field: INGESTED_AT
+        columns:
+          - name: CUSTOMER_ID
+            description: "PRIMARY KEY FOR BANK CUSTOMER."
+            tests:
+              - not_null
+              - unique
+
+      - name: FRAUD_LABELS
+        description: "RAW FRAUD LABELS FOR TRANSACTIONS."
+        loaded_at_field: INGESTED_AT
+        freshness:
+          warn_after: { count: 1, period: hour }
+          error_after: { count: 3, period: hour }
+        columns:
+          - name: TRANSACTION_ID
+            description: "TRANSACTION ID LINKED TO THE FRAUD LABEL."
+            tests:
+              - not_null
+          - name: LABEL
+            description: "FRAUD LABEL: 'FRAUD' OR 'LEGIT'."
+
+      # --- New RETAIL raw tables (for SmartInsights-style marts) ---
+
+      - name: PRODUCTS
+        description: "RAW PRODUCT MASTER DATA."
+        loaded_at_field: INGESTED_AT
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        columns:
+          - name: PRODUCT_ID
+            description: "PRIMARY KEY FOR PRODUCT."
+            tests:
+              - not_null
+              - unique
+          - name: CATEGORY_PATH
+            description: "HIERARCHICAL CATEGORY PATH (E.G. 'Electronics>Mobiles>Smartphones')."
+
+      - name: ORDERS
+        description: "RAW RETAIL ORDER HEADER DATA."
+        loaded_at_field: INGESTED_AT
+        columns:
+          - name: ORDER_ID
+            description: "PRIMARY KEY FOR ORDER."
+            tests:
+              - not_null
+          - name: CUSTOMER_ID
+            description: "CUSTOMER WHO PLACED THE ORDER."
+          - name: ORDER_TS
+            description: "TIMESTAMP WHEN ORDER WAS PLACED."
+
+      - name: ORDER_ITEMS
+        description: "RAW RETAIL ORDER LINE ITEMS."
+        loaded_at_field: INGESTED_AT
+        columns:
+          - name: ORDER_ITEM_ID
+            description: "PRIMARY KEY FOR ORDER LINE."
+            tests:
+              - not_null
+              - unique
+          - name: ORDER_ID
+            description: "PARENT ORDER ID."
+          - name: PRODUCT_ID
+            description: "PRODUCT IN THE ORDER LINE."
+
+      - name: RETAIL_CUSTOMERS
+        description: "RAW RETAIL CUSTOMER DATA."
+        loaded_at_field: INGESTED_AT
+        columns:
+          - name: CUSTOMER_ID
+            description: "PRIMARY KEY FOR RETAIL CUSTOMER."
+            tests:
+              - not_null
+              - unique
+
+      - name: STORES
+        description: "RAW STORE MASTER DATA."
+        loaded_at_field: INGESTED_AT
+        columns:
+          - name: STORE_ID
+            description: "PRIMARY KEY FOR STORE."
+            tests:
+              - not_null
+              - unique
+
+      # --- Shared calendar table ---
+
+      - name: CALENDAR
+        description: "DATE DIMENSION TABLE."
+        columns:
+          - name: DATE_KEY
+            description: "UNIQUE DATE KEY."
+            tests:
+              - not_null
+              - unique

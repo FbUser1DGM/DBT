@@ -1,0 +1,17 @@
+select
+    TRANSACTION_ID,
+    ACCOUNT_ID,
+    CARD_ID,
+    CUSTOMER_ID,
+    TRANSACTION_TS,
+    POSTING_DATE,
+    AMOUNT,
+    upper(CURRENCY) as CURRENCY,
+    MERCHANT_ID,
+    MERCHANT_CATEGORY,
+    upper(CHANNEL) as CHANNEL,
+    COUNTRY,
+    upper(STATUS) as STATUS,
+    IS_INTERNATIONAL,
+    INGESTED_AT as LOADED_AT
+from {{ source('RAW', 'BANK_TRANSACTIONS') }}
