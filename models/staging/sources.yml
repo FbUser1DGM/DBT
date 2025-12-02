@@ -11,22 +11,19 @@ sources:
 
       - name: RAW_CUSTOMERS
         description: "RAW CUSTOMERS DATA FROM SOURCE SYSTEM."
-        loaded_at_field: CREATED_AT
-        freshness:
-          warn_after: { count: 1, period: hour }
-          error_after: { count: 4, period: hour }
         columns:
           - name: CUSTOMER_ID
             description: "PRIMARY KEY FOR CUSTOMER."
             tests:
               - not_null
 
+        config:
+          loaded_at_field: CREATED_AT
+          freshness:
+            warn_after: {count: 1, period: hour}
+            error_after: {count: 4, period: hour}
       - name: RAW_ORDERS
         description: "RAW ORDER HEADER DATA."
-        loaded_at_field: CREATED_AT
-        freshness:
-          warn_after: { count: 1, period: hour }
-          error_after: { count: 4, period: hour }
         columns:
           - name: ORDER_ID
             description: "PRIMARY KEY FOR ORDER."
@@ -43,12 +40,13 @@ sources:
             tests:
               - not_null
 
+        config:
+          loaded_at_field: CREATED_AT
+          freshness:
+            warn_after: {count: 1, period: hour}
+            error_after: {count: 4, period: hour}
       - name: RAW_ORDER_ITEMS
         description: "RAW ORDER LINE ITEMS DATA."
-        loaded_at_field: CREATED_AT
-        freshness:
-          warn_after: { count: 1, period: hour }
-          error_after: { count: 4, period: hour }
         columns:
           - name: ORDER_ITEM_ID
             description: "PRIMARY KEY FOR ORDER LINE."
@@ -67,12 +65,13 @@ sources:
 
       # --- New BANKING raw tables ---
 
+        config:
+          loaded_at_field: CREATED_AT
+          freshness:
+            warn_after: {count: 1, period: hour}
+            error_after: {count: 4, period: hour}
       - name: BANK_TRANSACTIONS
         description: "RAW BANK CARD / ACCOUNT TRANSACTIONS."
-        loaded_at_field: INGESTED_AT
-        freshness:
-          warn_after: { count: 1, period: hour }
-          error_after: { count: 2, period: hour }
         columns:
           - name: TRANSACTION_ID
             description: "PRIMARY KEY FOR TRANSACTION."
@@ -88,9 +87,13 @@ sources:
           - name: AMOUNT
             description: "TRANSACTION AMOUNT IN LOCAL CURRENCY."
 
+        config:
+          loaded_at_field: INGESTED_AT
+          freshness:
+            warn_after: {count: 1, period: hour}
+            error_after: {count: 2, period: hour}
       - name: CARDS
         description: "RAW CARD MASTER DATA."
-        loaded_at_field: INGESTED_AT
         columns:
           - name: CARD_ID
             description: "PRIMARY KEY FOR CARD."
@@ -99,9 +102,10 @@ sources:
           - name: CUSTOMER_ID
             description: "OWNER OF THE CARD."
 
+        config:
+          loaded_at_field: INGESTED_AT
       - name: BANK_CUSTOMERS
         description: "RAW BANK CUSTOMER MASTER DATA."
-        loaded_at_field: INGESTED_AT
         columns:
           - name: CUSTOMER_ID
             description: "PRIMARY KEY FOR BANK CUSTOMER."
@@ -109,12 +113,10 @@ sources:
               - not_null
               - unique
 
+        config:
+          loaded_at_field: INGESTED_AT
       - name: FRAUD_LABELS
         description: "RAW FRAUD LABELS FOR TRANSACTIONS."
-        loaded_at_field: INGESTED_AT
-        freshness:
-          warn_after: { count: 1, period: hour }
-          error_after: { count: 3, period: hour }
         columns:
           - name: TRANSACTION_ID
             description: "TRANSACTION ID LINKED TO THE FRAUD LABEL."
@@ -125,12 +127,13 @@ sources:
 
       # --- New RETAIL raw tables (for SmartInsights-style marts) ---
 
+        config:
+          loaded_at_field: INGESTED_AT
+          freshness:
+            warn_after: {count: 1, period: hour}
+            error_after: {count: 3, period: hour}
       - name: PRODUCTS
         description: "RAW PRODUCT MASTER DATA."
-        loaded_at_field: INGESTED_AT
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         columns:
           - name: PRODUCT_ID
             description: "PRIMARY KEY FOR PRODUCT."
@@ -140,9 +143,13 @@ sources:
           - name: CATEGORY_PATH
             description: "HIERARCHICAL CATEGORY PATH (E.G. 'Electronics>Mobiles>Smartphones')."
 
+        config:
+          loaded_at_field: INGESTED_AT
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: ORDERS
         description: "RAW RETAIL ORDER HEADER DATA."
-        loaded_at_field: INGESTED_AT
         columns:
           - name: ORDER_ID
             description: "PRIMARY KEY FOR ORDER."
@@ -153,9 +160,10 @@ sources:
           - name: ORDER_TS
             description: "TIMESTAMP WHEN ORDER WAS PLACED."
 
+        config:
+          loaded_at_field: INGESTED_AT
       - name: ORDER_ITEMS
         description: "RAW RETAIL ORDER LINE ITEMS."
-        loaded_at_field: INGESTED_AT
         columns:
           - name: ORDER_ITEM_ID
             description: "PRIMARY KEY FOR ORDER LINE."
@@ -167,9 +175,10 @@ sources:
           - name: PRODUCT_ID
             description: "PRODUCT IN THE ORDER LINE."
 
+        config:
+          loaded_at_field: INGESTED_AT
       - name: RETAIL_CUSTOMERS
         description: "RAW RETAIL CUSTOMER DATA."
-        loaded_at_field: INGESTED_AT
         columns:
           - name: CUSTOMER_ID
             description: "PRIMARY KEY FOR RETAIL CUSTOMER."
@@ -177,9 +186,10 @@ sources:
               - not_null
               - unique
 
+        config:
+          loaded_at_field: INGESTED_AT
       - name: STORES
         description: "RAW STORE MASTER DATA."
-        loaded_at_field: INGESTED_AT
         columns:
           - name: STORE_ID
             description: "PRIMARY KEY FOR STORE."
@@ -189,6 +199,8 @@ sources:
 
       # --- Shared calendar table ---
 
+        config:
+          loaded_at_field: INGESTED_AT
       - name: CALENDAR
         description: "DATE DIMENSION TABLE."
         columns:
