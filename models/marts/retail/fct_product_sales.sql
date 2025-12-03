@@ -38,7 +38,6 @@ joined as (
         o.ORDER_CHANNEL,
         o.CURRENCY,
         greatest(o.ORDER_TS, i.LOADED_AT) as LOADED_AT
-        bogus_column as WILL_BREAK 
     from items i
     join orders o
       on i.ORDER_ID = o.ORDER_ID
